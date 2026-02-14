@@ -1,0 +1,25 @@
+package(default_visibility = ["//visibility:public"])
+
+alias(
+    name = "ripgrep",
+    actual = select({
+        "@platforms//os:linux": ":rg_linux",
+        "@platforms//os:macos": ":rg_macos",
+    }),
+)
+
+alias(
+    name = "rg_linux",
+    actual = select({
+        "@platforms//cpu:x86_64": "@ripgrep_linux_amd64//:rg",
+        "@platforms//cpu:aarch64": "@ripgrep_linux_arm64//:rg",
+    }),
+)
+
+alias(
+    name = "rg_macos",
+    actual = select({
+        "@platforms//cpu:x86_64": "@ripgrep_macos_amd64//:rg",
+        "@platforms//cpu:aarch64": "@ripgrep_macos_arm64//:rg",
+    }),
+)

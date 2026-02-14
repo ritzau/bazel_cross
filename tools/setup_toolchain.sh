@@ -109,6 +109,22 @@ else
     echo "Warning: grcov binary not found in $GRCOV_BIN"
 fi
 
+echo "Building hermetic ripgrep..."
+bazel build //tools/ripgrep
+
+# Resolving ripgrep binary
+RG_BIN=$(bazel cquery //tools/ripgrep --output=files | xargs dirname)
+if [[ "$RG_BIN" != /* ]]; then
+  RG_BIN="$PWD/$RG_BIN"
+fi
+
+if [ -f "$RG_BIN/rg" ]; then
+    ln -sf "$RG_BIN/rg" "$TARGET_DIR/rg"
+    echo "Symlinked rg to $TARGET_DIR/rg"
+else
+    echo "Warning: ripgrep binary not found in $RG_BIN"
+fi
+
 echo ""
 echo "Done! Add this to your shell profile (e.g. ~/.zshrc):"
 echo "export PATH=\"\$PWD/$TARGET_DIR:\$PATH\""
