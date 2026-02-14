@@ -1,0 +1,26 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "greet",
+    srcs = ["greet.cc"],
+    hdrs = ["greet.h"],
+)
+
+cc_binary(
+    name = "main",
+    srcs = ["main.cc"],
+    deps = [":greet"],
+)
+
+cc_test(
+    name = "greet_test",
+    srcs = ["greet_test.cc"],
+    deps = [
+        ":greet",
+        "@googletest//:gtest_main",
+    ],
+)

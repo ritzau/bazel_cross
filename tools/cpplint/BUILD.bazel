@@ -1,0 +1,14 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+
+genrule(
+    name = "cpplint_src",
+    srcs = ["@cpplint//file:cpplint.py"],
+    outs = ["cpplint.py"],
+    cmd = "cp $< $@",
+)
+
+py_binary(
+    name = "cpplint",
+    srcs = ["cpplint.py"],
+    main = "cpplint.py",
+)

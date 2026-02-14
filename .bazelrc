@@ -15,4 +15,8 @@ try-import .bazelrc.user
 
 # Coverage defaults
 coverage --combined_report=lcov
+coverage --combined_report=lcov
 coverage --instrumentation_filter=//
+
+# C++ Standard
+build --cxxopt=-std=c++20
