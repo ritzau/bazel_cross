@@ -12,7 +12,6 @@
 
 # Tools
 /bazel-tools
-.envrc
 
 # Editor
 .vscode/
