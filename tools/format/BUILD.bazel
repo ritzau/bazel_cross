@@ -1,0 +1,10 @@
+load("@aspect_rules_lint//format:defs.bzl", "format_multirun")
+
+package(default_visibility = ["//visibility:public"])
+
+format_multirun(
+    name = "format",
+    c = "@llvm_toolchain//:bin/clang-format",
+    cc = "@llvm_toolchain//:bin/clang-format",
+    starlark = "@buildifier_prebuilt//:buildifier",
+)

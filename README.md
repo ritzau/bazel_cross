@@ -3,6 +3,17 @@
 This example shows how to build a simple Hello World program for Linux ARM64 
 from a Linux x86_64 (or macOS) host using Bazel with Bzlmod and `toolchains_llvm`, employing a hermetic Chromium sysroot.
 
+## Code Formatting
+
+Format all files (C/C++, Starlark, etc.) with a single command:
+```bash
+bazel run //tools/format
+```
+
+This uses `aspect_rules_lint` to coordinate:
+- **C/C++**: `clang-format` (from the hermetic LLVM toolchain).
+- **Starlark**: `buildifier` (hermetic pre-built binary). 
+
 ## Project Structure
 
 ```

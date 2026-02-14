@@ -1,0 +1,55 @@
+""" Banana """
+
+module(
+    name = "hello_arm64",
+    version = "1.0",
+)
+
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "rules_cc", version = "0.2.14")
+bazel_dep(name = "aspect_rules_lint", version = "2.1.0")
+
+bazel_dep(name = "buildifier_prebuilt", version = "6.4.0", dev_dependency = True)
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+git_override(
+    module_name = "hedron_compile_commands",
+    commit = "abb61a688167623088f8768cc9264798df6a9d10",
+    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
+)
+
+bazel_dep(name = "toolchains_llvm", version = "1.6.0")
+
+# Configure and register the toolchain.
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
+llvm.toolchain(
+    llvm_version = "19.1.6",
+)
+
+sysroot = use_repo_rule("@toolchains_llvm//toolchain:sysroot.bzl", "sysroot")
+
+sysroot(
+    name = "org_chromium_sysroot_linux_amd64",
+    sha256 = "47c02efd920c7f9c6b98b1498443170aa6102507d0672af5e794070833ef7454",
+    urls = ["https://commondatastorage.googleapis.com/chrome-linux-sysroot/toolchain/4c00ba2ad61ca7cc39392f192aa39420e086777c/debian_bullseye_amd64_sysroot.tar.xz"],
+)
+
+sysroot(
+    name = "org_chromium_sysroot_linux_arm64",
+    sha256 = "902d1a40a5fd8c3764a36c8d377af5945a92e3d264c6252855bda4d7ef81d3df",
+    urls = ["https://commondatastorage.googleapis.com/chrome-linux-sysroot/toolchain/41a6c8dec4c4304d6509e30cbaf9218dffb4438e/debian_bullseye_arm64_sysroot.tar.xz"],
+)
+
+llvm.sysroot(
+    name = "llvm_toolchain",
+    label = "@org_chromium_sysroot_linux_amd64//sysroot",
+    targets = ["linux-x86_64"],
+)
+llvm.sysroot(
+    name = "llvm_toolchain",
+    label = "@org_chromium_sysroot_linux_arm64//sysroot",
+    targets = ["linux-aarch64"],
+)
+use_repo(llvm, "llvm_toolchain")
+use_repo(llvm, "llvm_toolchain_llvm")
+
+register_toolchains("@llvm_toolchain//:all")

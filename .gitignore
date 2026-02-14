@@ -1,0 +1,10 @@
+# Bazel
+/bazel-*
+.bazelrc.user
+/compile_commands.json
+
+# Editor
+.vscode/
+
+# OS
+.DS_Store
