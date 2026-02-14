@@ -1,13 +1,17 @@
 # Bazel
 /bazel-*
 .bazelrc.user
-/compile_commands.json
 /external
+
+# Compilation Database
 /compile_commands.json
+
+# Coverage
 /coverage.info
 /coverage_report
-/external
-/tools/bin
+
+# Tools
+/bazel-tools
 .envrc
 
 # Editor

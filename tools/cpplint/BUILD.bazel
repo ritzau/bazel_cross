@@ -5,10 +5,12 @@ genrule(
     srcs = ["@cpplint//file:cpplint.py"],
     outs = ["cpplint.py"],
     cmd = "cp $< $@",
+    tags = ["manual"],
 )
 
 py_binary(
     name = "cpplint",
     srcs = ["cpplint.py"],
     main = "cpplint.py",
+    tags = ["manual"],
 )

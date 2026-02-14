@@ -6,6 +6,7 @@ alias(
         "@platforms//os:linux": ":jq_linux",
         "@platforms//os:macos": ":jq_macos",
     }),
+    tags = ["manual"],
 )
 
 alias(
@@ -14,6 +15,7 @@ alias(
         "@platforms//cpu:x86_64": "@jq_linux_amd64//file",
         "@platforms//cpu:aarch64": "@jq_linux_arm64//file",
     }),
+    tags = ["manual"],
 )
 
 alias(
@@ -22,4 +24,5 @@ alias(
         "@platforms//cpu:x86_64": "@jq_macos_amd64//file",
         "@platforms//cpu:aarch64": "@jq_macos_arm64//file",
     }),
+    tags = ["manual"],
 )

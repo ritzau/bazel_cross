@@ -7,6 +7,7 @@ alias(
         "@platforms//os:macos": ":dprint_macos",
         "//conditions:default": ":dprint_linux",
     }),
+    tags = ["manual"],
 )
 
 alias(
@@ -16,6 +17,7 @@ alias(
         "@platforms//cpu:aarch64": "@dprint_linux_arm64//:dprint",
         "//conditions:default": "@dprint_linux_amd64//:dprint",
     }),
+    tags = ["manual"],
 )
 
 alias(
@@ -25,4 +27,5 @@ alias(
         "@platforms//cpu:aarch64": "@dprint_macos_arm64//:dprint",
         "//conditions:default": "@dprint_macos_amd64//:dprint",
     }),
+    tags = ["manual"],
 )

@@ -11,6 +11,7 @@ bazel_dep(name = "aspect_rules_lint", version = "2.1.0")
 bazel_dep(name = "rules_license", version = "1.0.0")
 bazel_dep(name = "rules_python", version = "0.31.0")
 bazel_dep(name = "googletest", version = "1.15.2")
+bazel_dep(name = "rules_shell", version = "0.3.0")
 
 bazel_dep(name = "buildifier_prebuilt", version = "6.4.0", dev_dependency = True)
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
