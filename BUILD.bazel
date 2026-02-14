@@ -1,8 +1,25 @@
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 
 cc_binary(
     name = "hello",
     srcs = ["hello.c"],
+)
+
+cc_library(
+    name = "greet",
+    srcs = ["greet.c"],
+    hdrs = ["greet.h"],
+)
+
+cc_test(
+    name = "hello_test",
+    srcs = ["test.cc"],
+    deps = [
+        ":greet",
+        "@googletest//:gtest_main",
+    ],
 )
 
 platform(

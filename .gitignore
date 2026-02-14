@@ -4,6 +4,8 @@
 /compile_commands.json
 /external
 /compile_commands.json
+/coverage.info
+/coverage_report
 /external
 /tools/bin
 .envrc

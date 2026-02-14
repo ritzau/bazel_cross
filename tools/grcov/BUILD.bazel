@@ -1,0 +1,25 @@
+package(default_visibility = ["//visibility:public"])
+
+alias(
+    name = "grcov",
+    actual = select({
+        "@platforms//os:linux": ":grcov_linux",
+        "@platforms//os:macos": ":grcov_macos",
+    }),
+)
+
+alias(
+    name = "grcov_linux",
+    actual = select({
+        "@platforms//cpu:x86_64": "@grcov_linux_amd64//:grcov",
+        "@platforms//cpu:aarch64": "@grcov_linux_arm64//:grcov",
+    }),
+)
+
+alias(
+    name = "grcov_macos",
+    actual = select({
+        "@platforms//cpu:x86_64": "@grcov_macos_amd64//:grcov",
+        "@platforms//cpu:aarch64": "@grcov_macos_arm64//:grcov",
+    }),
+)

@@ -8,6 +8,7 @@ module(
 bazel_dep(name = "platforms", version = "1.0.0")
 bazel_dep(name = "rules_cc", version = "0.2.14")
 bazel_dep(name = "aspect_rules_lint", version = "2.1.0")
+bazel_dep(name = "googletest", version = "1.15.2")
 
 bazel_dep(name = "buildifier_prebuilt", version = "6.4.0", dev_dependency = True)
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
@@ -86,4 +87,34 @@ http_file(
     executable = True,
     sha256 = "4838b375b4856f642646d691060ceb68e91845112e4313e617d332616212b614",
     urls = ["https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-macos-arm64"],
+)
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "grcov_linux_amd64",
+    build_file_content = "exports_files(['grcov'])",
+    sha256 = "80df5b760e901d56b28515584311137ffcd332eb7375b452b22a9538851d0993",
+    urls = ["https://github.com/mozilla/grcov/releases/download/v0.10.5/grcov-x86_64-unknown-linux-gnu.tar.bz2"],
+)
+
+http_archive(
+    name = "grcov_linux_arm64",
+    build_file_content = "exports_files(['grcov'])",
+    sha256 = "4f1d93bc6a87b824f393f55ceb09c61ea560bb193a27adf6b2d0e4bac0a2ff62",
+    urls = ["https://github.com/mozilla/grcov/releases/download/v0.10.5/grcov-aarch64-unknown-linux-gnu.tar.bz2"],
+)
+
+http_archive(
+    name = "grcov_macos_amd64",
+    build_file_content = "exports_files(['grcov'])",
+    sha256 = "02c3161743c0ee8fa1e72dfe7a37e2009608aee010827067b101a0ccc72dd344",
+    urls = ["https://github.com/mozilla/grcov/releases/download/v0.10.5/grcov-x86_64-apple-darwin.tar.bz2"],
+)
+
+http_archive(
+    name = "grcov_macos_arm64",
+    build_file_content = "exports_files(['grcov'])",
+    sha256 = "4d92a519a950adc1ca4a62be8d717eab160fec5406ee7bcad55bf830c366853e",
+    urls = ["https://github.com/mozilla/grcov/releases/download/v0.10.5/grcov-aarch64-apple-darwin.tar.bz2"],
 )

@@ -91,6 +91,24 @@ else
     echo "Warning: jq binary not found in $JQ_BIN"
 fi
 
+
+
+echo "Building hermetic grcov..."
+bazel build //tools/grcov
+
+# Resolving grcov binary
+GRCOV_BIN=$(bazel cquery //tools/grcov --output=files | xargs dirname)
+if [[ "$GRCOV_BIN" != /* ]]; then
+  GRCOV_BIN="$PWD/$GRCOV_BIN"
+fi
+
+if [ -f "$GRCOV_BIN/grcov" ]; then
+    ln -sf "$GRCOV_BIN/grcov" "$TARGET_DIR/grcov"
+    echo "Symlinked grcov to $TARGET_DIR/grcov"
+else
+    echo "Warning: grcov binary not found in $GRCOV_BIN"
+fi
+
 echo ""
 echo "Done! Add this to your shell profile (e.g. ~/.zshrc):"
 echo "export PATH=\"\$PWD/$TARGET_DIR:\$PATH\""

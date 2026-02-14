@@ -12,3 +12,7 @@ build:macos_x86_64 --platforms=//:macos_x86_64
 
 # Import user-specific configuration if present
 try-import .bazelrc.user
+
+# Coverage defaults
+coverage --combined_report=lcov
+coverage --instrumentation_filter=//
