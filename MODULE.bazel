@@ -53,3 +53,37 @@ use_repo(llvm, "llvm_toolchain")
 use_repo(llvm, "llvm_toolchain_llvm")
 
 register_toolchains("@llvm_toolchain//:all")
+
+http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
+http_file(
+    name = "jq_linux_amd64",
+    downloaded_file_path = "jq",
+    executable = True,
+    sha256 = "5942c9b0934e510ee61eb3e30273f1b3fe2590df93933a93d7c58b81d19c8ff5",
+    urls = ["https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64"],
+)
+
+http_file(
+    name = "jq_linux_arm64",
+    downloaded_file_path = "jq",
+    executable = True,
+    sha256 = "4dd2d8a0661df0b22f1bb9a1f9830f06b6f3b8f7d91211a1ef5d7c4f06a8b4a5",
+    urls = ["https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-arm64"],
+)
+
+http_file(
+    name = "jq_macos_amd64",
+    downloaded_file_path = "jq",
+    executable = True,
+    sha256 = "4155822bbf5ea90f5c79cf254665975eb4274d426d0709770c21774de5407443",
+    urls = ["https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-macos-amd64"],
+)
+
+http_file(
+    name = "jq_macos_arm64",
+    downloaded_file_path = "jq",
+    executable = True,
+    sha256 = "4838b375b4856f642646d691060ceb68e91845112e4313e617d332616212b614",
+    urls = ["https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-macos-arm64"],
+)

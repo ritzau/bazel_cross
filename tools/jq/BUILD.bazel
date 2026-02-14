@@ -1,0 +1,25 @@
+package(default_visibility = ["//visibility:public"])
+
+alias(
+    name = "jq",
+    actual = select({
+        "@platforms//os:linux": ":jq_linux",
+        "@platforms//os:macos": ":jq_macos",
+    }),
+)
+
+alias(
+    name = "jq_linux",
+    actual = select({
+        "@platforms//cpu:x86_64": "@jq_linux_amd64//file",
+        "@platforms//cpu:aarch64": "@jq_linux_arm64//file",
+    }),
+)
+
+alias(
+    name = "jq_macos",
+    actual = select({
+        "@platforms//cpu:x86_64": "@jq_macos_amd64//file",
+        "@platforms//cpu:aarch64": "@jq_macos_arm64//file",
+    }),
+)

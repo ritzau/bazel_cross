@@ -2,6 +2,11 @@
 /bazel-*
 .bazelrc.user
 /compile_commands.json
+/external
+/compile_commands.json
+/external
+/tools/bin
+.envrc
 
 # Editor
 .vscode/
