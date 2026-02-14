@@ -1,0 +1,47 @@
+[
+    {
+        "label": "@llvm_toolchain//:bin/clang-format",
+        "build_target": "__LLVM_TARGET__",
+        "items": {
+            "clang-format": "clang-format",
+            "clang-tidy": "clang-tidy",
+            "clangd": "clangd",
+            "llvm-cov": "llvm-cov",
+            "llvm-profdata": "llvm-profdata",
+            "lldb": "lldb",
+            "clang": [
+                "clang",
+                "clang-cpp"
+            ],
+            "clang++": [
+                "clang++",
+                "clang-cpp"
+            ],
+            "llvm-symbolizer": "llvm-symbolizer"
+        }
+    },
+    {
+        "label": "//tools/jq",
+        "items": {
+            "jq": "jq"
+        }
+    },
+    {
+        "label": "//tools/grcov",
+        "items": {
+            "grcov": "grcov"
+        }
+    },
+    {
+        "label": "//tools/ripgrep",
+        "items": {
+            "rg": "rg"
+        }
+    },
+    {
+        "label": "//tools/dprint",
+        "items": {
+            "dprint": "dprint"
+        }
+    }
+]
