@@ -2,12 +2,19 @@ load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 
-package(default_visibility = ["//visibility:public"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_visibility = ["//visibility:public"],
+)
 
 cc_library(
     name = "greet",
     srcs = ["greet.cc"],
     hdrs = ["greet.h"],
+    deps = [
+        "//third_party/mock_lib",
+        "@abseil-cpp//absl/strings",
+    ],
 )
 
 cc_binary(

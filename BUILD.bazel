@@ -1,17 +1,24 @@
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
-load("@rules_license//rules:license.bzl", "license")
+load("@package_metadata//:defs.bzl", "package_metadata")
+load("@package_metadata//licenses/rules:license.bzl", "license")
+load("//tools:license_report.bzl", "license_report")
 
 package(
     default_applicable_licenses = [":license"],
     default_visibility = ["//visibility:public"],
 )
 
-license(
+package_metadata(
     name = "license",
-    license_kinds = [
-        "@rules_license//licenses/spdx:0BSD",
-    ],
-    license_text = "LICENSE",
+    attributes = [":license_text"],
+    purl = "pkg:generic/bazel-cross",
+    visibility = ["//visibility:public"],
+)
+
+license(
+    name = "license_text",
+    kind = "@package_metadata//licenses/spdx:0BSD",
+    text = "LICENSE.md",
 )
 
 platform(
@@ -41,4 +48,9 @@ platform(
 refresh_compile_commands(
     name = "refresh_compile_commands",
     targets = ["//bazel_cross/..."],
+)
+
+license_report(
+    name = "license_report",
+    deps = ["//bazel_cross:main"],
 )

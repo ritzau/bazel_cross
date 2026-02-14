@@ -1,0 +1,26 @@
+load("@package_metadata//:defs.bzl", "package_metadata")
+load("@package_metadata//licenses/rules:license.bzl", "license")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+package(
+    default_applicable_licenses = [":metadata"],
+    default_visibility = ["//visibility:public"],
+)
+
+package_metadata(
+    name = "metadata",
+    attributes = [":license_text"],
+    purl = "pkg:generic/mock-lib@1.0",
+)
+
+license(
+    name = "license_text",
+    kind = "@package_metadata//licenses/spdx:Apache-2.0",
+    text = "LICENSE",
+)
+
+cc_library(
+    name = "mock_lib",
+    srcs = ["mock.cc"],
+    hdrs = ["mock.h"],
+)
