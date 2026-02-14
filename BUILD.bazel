@@ -1,3 +1,4 @@
+load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
 load("@rules_license//rules:license.bzl", "license")
 
 package(
@@ -35,4 +36,9 @@ platform(
         "@platforms//os:macos",
         "@platforms//cpu:x86_64",
     ],
+)
+
+refresh_compile_commands(
+    name = "refresh_compile_commands",
+    targets = ["//bazel_cross/..."],
 )
