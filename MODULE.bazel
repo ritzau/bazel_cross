@@ -160,3 +160,31 @@ http_archive(
     strip_prefix = "ripgrep-15.1.0-aarch64-apple-darwin",
     urls = ["https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-aarch64-apple-darwin.tar.gz"],
 )
+
+http_archive(
+    name = "dprint_linux_amd64",
+    build_file_content = "exports_files(['dprint'])",
+    sha256 = "809b40f2e0f49618a1a3e61c31405e3f436d4e51e4a6e3e5e4f21e0a2d480e69",
+    urls = ["https://github.com/dprint/dprint/releases/download/0.45.0/dprint-x86_64-unknown-linux-gnu.zip"],
+)
+
+http_archive(
+    name = "dprint_linux_arm64",
+    build_file_content = "exports_files(['dprint'])",
+    sha256 = "843e9d8c0b7c3e5e7e4a1e9c2d1e0f4e8e1f0e4d0e8a375490795c05f0a0d674",
+    urls = ["https://github.com/dprint/dprint/releases/download/0.45.0/dprint-aarch64-unknown-linux-gnu.zip"],
+)
+
+http_archive(
+    name = "dprint_macos_amd64",
+    build_file_content = "exports_files(['dprint'])",
+    sha256 = "6df01e0357049ad3bc62bbd2f60c9c448bd747b650ebf20f7ab5a38cefd36b44",
+    urls = ["https://github.com/dprint/dprint/releases/download/0.45.0/dprint-x86_64-apple-darwin.zip"],
+)
+
+http_archive(
+    name = "dprint_macos_arm64",
+    build_file_content = "exports_files(['dprint'])",
+    sha256 = "3e9d8c0b7c3e5e7e4a1e9c2d1e0f4e8e1f0e4d0e8a375490795c05f0a0d674b2",
+    urls = ["https://github.com/dprint/dprint/releases/download/0.45.0/dprint-aarch64-apple-darwin.zip"],
+)

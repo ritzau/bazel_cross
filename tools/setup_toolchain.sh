@@ -125,6 +125,22 @@ else
     echo "Warning: ripgrep binary not found in $RG_BIN"
 fi
 
+echo "Building hermetic dprint..."
+bazel build //tools/dprint
+
+# Resolving dprint binary
+DPRINT_BIN=$(bazel cquery //tools/dprint --output=files | xargs dirname)
+if [[ "$DPRINT_BIN" != /* ]]; then
+  DPRINT_BIN="$PWD/$DPRINT_BIN"
+fi
+
+if [ -f "$DPRINT_BIN/dprint" ]; then
+    ln -sf "$DPRINT_BIN/dprint" "$TARGET_DIR/dprint"
+    echo "Symlinked dprint to $TARGET_DIR/dprint"
+else
+    echo "Warning: dprint binary not found in $DPRINT_BIN"
+fi
+
 echo ""
 echo "Done! Add this to your shell profile (e.g. ~/.zshrc):"
 echo "export PATH=\"\$PWD/$TARGET_DIR:\$PATH\""

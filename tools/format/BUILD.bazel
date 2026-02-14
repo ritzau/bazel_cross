@@ -6,5 +6,9 @@ format_multirun(
     name = "format",
     c = "@llvm_toolchain//:bin/clang-format",
     cc = "@llvm_toolchain//:bin/clang-format",
+    javascript = "//tools/dprint:dprint",
+    javascript_fix_args = ["fmt"],
+    markdown = "//tools/dprint:dprint",
+    markdown_fix_args = ["fmt"],
     starlark = "@buildifier_prebuilt//:buildifier",
 )

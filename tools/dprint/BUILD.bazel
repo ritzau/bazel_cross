@@ -1,0 +1,28 @@
+package(default_visibility = ["//visibility:public"])
+
+alias(
+    name = "dprint",
+    actual = select({
+        "@platforms//os:linux": ":dprint_linux",
+        "@platforms//os:macos": ":dprint_macos",
+        "//conditions:default": ":dprint_linux",
+    }),
+)
+
+alias(
+    name = "dprint_linux",
+    actual = select({
+        "@platforms//cpu:x86_64": "@dprint_linux_amd64//:dprint",
+        "@platforms//cpu:aarch64": "@dprint_linux_arm64//:dprint",
+        "//conditions:default": "@dprint_linux_amd64//:dprint",
+    }),
+)
+
+alias(
+    name = "dprint_macos",
+    actual = select({
+        "@platforms//cpu:x86_64": "@dprint_macos_amd64//:dprint",
+        "@platforms//cpu:aarch64": "@dprint_macos_arm64//:dprint",
+        "//conditions:default": "@dprint_macos_amd64//:dprint",
+    }),
+)
