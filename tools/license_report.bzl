@@ -1,112 +1,112 @@
-"""Rules for generating license reports using supply_chain_tools."""
+"""Rules for generating license reports using rules_license."""
 
-load("@supply_chain_tools//gather_metadata:gather_metadata.bzl", "gather_metadata_info")
-load("@supply_chain_tools//gather_metadata:providers.bzl", "TransitiveMetadataInfo")
+load("@rules_license//rules:providers.bzl", "LicenseInfo")
 
-# Provider to collect all seen target labels
-AllTargetsInfo = provider(
-    fields = {"labels": "depset of all seen target labels"},
+LicenseReportInfo = provider(
+    doc = "Provider for collecting transitive license information.",
+    fields = {"entries": "depset of structs(target=str, licenses=tuple)"},
 )
 
-def _serialize_provider(p):
-    info = {}
+def _serialize_kind(kind):
+    # LicenseKindInfo fields might vary, let's be safe
+    return struct(
+        name = kind.name,
+        conditions = tuple(kind.conditions) if hasattr(kind, "conditions") else (),
+    )
 
-    if hasattr(p, "metadata") and hasattr(p, "files") and not hasattr(p, "attributes"):
-        # Likely PackageMetadataInfo
-        info["type"] = "package_metadata"
-        info["metadata_file"] = p.metadata.path if p.metadata else None
-        return info
+def _serialize_license(lic):
+    # We use structs because they are hashable and can be put in depsets/tuples if needed recursively
+    # But here we just need to ensure the top level list is a tuple
 
-    if hasattr(p, "attributes") and hasattr(p, "kind"):
-        # Likely PackageAttributeInfo
-        info["type"] = "attribute"
-        info["kind"] = p.kind
-        info["attribute_file"] = p.attributes.path if p.attributes else None
-        return info
+    kinds = tuple([_serialize_kind(k) for k in lic.license_kinds])
 
-    if hasattr(p, "identifier") and hasattr(p, "name"):
-        # Likely LicenseKindInfo
-        info["type"] = "license_kind"
-        info["id"] = p.identifier
-        info["name"] = p.name
-        return info
+    return struct(
+        kinds = kinds,
+        copyright_notice = lic.copyright_notice,
+        package_name = lic.package_name,
+        license_text = lic.license_text.path if lic.license_text else None,
+    )
 
-    info["type"] = "unknown"
-    info["str"] = str(p)
-    return info
+def _license_aspect_impl(target, ctx):
+    my_licenses = []
 
-def _collect_all_aspect_impl(target, ctx):
-    labels = [str(target.label)]
-    transitive = []
+    # Check for applicable_licenses AND package_metadata
+    candidates = []
+    if hasattr(ctx.rule.attr, "applicable_licenses"):
+        candidates.extend(ctx.rule.attr.applicable_licenses)
+    if hasattr(ctx.rule.attr, "package_metadata"):
+        candidates.extend(ctx.rule.attr.package_metadata)
 
-    # We look at all attributes of the rule
+    for dep in candidates:
+        if LicenseInfo in dep:
+            my_licenses.append(dep[LicenseInfo])
+
+    serialized_licenses = tuple([_serialize_license(lic) for lic in my_licenses])
+
+    entry = struct(
+        target = str(target.label),
+        target_licenses = serialized_licenses,
+    )
+
+    transitive_entries = []
+
+    attr_aspects = ["deps", "srcs", "data", "implementation_deps", "exports"]
     if hasattr(ctx.rule, "attr"):
-        for attr in dir(ctx.rule.attr):
-            val = getattr(ctx.rule.attr, attr)
-            if type(val) == "Target":
-                if AllTargetsInfo in val:
-                    transitive.append(val[AllTargetsInfo].labels)
-            elif type(val) == "list":
-                for item in val:
-                    if type(item) == "Target":
-                        if AllTargetsInfo in item:
-                            transitive.append(item[AllTargetsInfo].labels)
+        for attr_name in attr_aspects:
+            if hasattr(ctx.rule.attr, attr_name):
+                val = getattr(ctx.rule.attr, attr_name)
+                if type(val) == "list":
+                    for dep in val:
+                        if LicenseReportInfo in dep:
+                            transitive_entries.append(dep[LicenseReportInfo].entries)
+                elif type(val) == "Target":
+                    if LicenseReportInfo in val:
+                        transitive_entries.append(val[LicenseReportInfo].entries)
 
-    return [AllTargetsInfo(labels = depset(labels, transitive = transitive))]
+    return [LicenseReportInfo(
+        entries = depset([entry], transitive = transitive_entries),
+    )]
 
-collect_all_aspect = aspect(
-    implementation = _collect_all_aspect_impl,
-    attr_aspects = ["*"],
+license_aspect = aspect(
+    implementation = _license_aspect_impl,
+    attr_aspects = ["deps", "srcs", "data", "implementation_deps", "exports"],
 )
 
 def _license_report_impl(ctx):
-    metadata_targets = {}
-    all_seen_targets = depset()
-
-    # Process metadata from supply_chain_tools aspect
+    transitive_deps = []
     for dep in ctx.attr.deps:
-        if TransitiveMetadataInfo in dep:
-            for twmi in dep[TransitiveMetadataInfo].trans.to_list():
-                target_str = str(twmi.target)
-                if target_str not in metadata_targets:
-                    entry = {
-                        "target": target_str,
-                        "metadata": [],
-                    }
-                    if hasattr(twmi, "metadata"):
-                        for m in twmi.metadata.to_list():
-                            entry["metadata"].append(_serialize_provider(m))
-                    metadata_targets[target_str] = entry
+        if LicenseReportInfo in dep:
+            transitive_deps.append(dep[LicenseReportInfo].entries)
 
-        if AllTargetsInfo in dep:
-            all_seen_targets = depset(transitive = [all_seen_targets, dep[AllTargetsInfo].labels])
+    all_entries = depset(transitive = transitive_deps)
 
-    result = []
-    for target in all_seen_targets.to_list():
-        if target in metadata_targets:
-            result.append(metadata_targets[target])
-        else:
-            # Report targets even if they have no metadata
-            result.append({
-                "target": target,
-                "metadata": [],
-                "status": "no metadata found",
-            })
+    data_by_target = {}
+    for entry in all_entries.to_list():
+        if entry.target not in data_by_target:
+            data_by_target[entry.target] = entry.target_licenses
 
-    content = json.encode(result)
+    output_list = []
+    # Collect all unique licenses as well?
+    # For now just output simple target list
 
-    name = "%s_metadata_info.json" % ctx.label.name
-    out = ctx.actions.declare_file(name)
-    ctx.actions.write(
-        output = out,
-        content = content,
-    )
+    # Sort for deterministic output
+    sorted_targets = sorted(data_by_target.keys())
 
+    for target_label in sorted_targets:
+        target_licenses = data_by_target[target_label]
+        output_list.append({
+            "target": target_label,
+            "licenses": target_licenses,
+        })
+
+    content = json.encode_indent(output_list)
+    out = ctx.actions.declare_file(ctx.label.name + ".json")
+    ctx.actions.write(out, content)
     return [DefaultInfo(files = depset([out]))]
 
 license_report = rule(
     implementation = _license_report_impl,
     attrs = {
-        "deps": attr.label_list(aspects = [gather_metadata_info, collect_all_aspect]),
+        "deps": attr.label_list(aspects = [license_aspect]),
     },
 )

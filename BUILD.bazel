@@ -1,6 +1,5 @@
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
-load("@package_metadata//:defs.bzl", "package_metadata")
-load("@package_metadata//licenses/rules:license.bzl", "license")
+load("@rules_license//rules:license.bzl", "license")
 load("//tools:license_report.bzl", "license_report")
 
 package(
@@ -8,17 +7,12 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-package_metadata(
-    name = "license",
-    attributes = [":license_text"],
-    purl = "pkg:generic/bazel-cross",
-    visibility = ["//visibility:public"],
-)
-
 license(
-    name = "license_text",
-    kind = "@package_metadata//licenses/spdx:0BSD",
-    text = "LICENSE.md",
+    name = "license",
+    license_kinds = [
+        "@rules_license//licenses/spdx:0BSD",
+    ],
+    license_text = "LICENSE.md",
 )
 
 platform(
