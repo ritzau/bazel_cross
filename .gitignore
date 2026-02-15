@@ -3,15 +3,15 @@
 .bazelrc.user
 /external
 
+# Cache directory (contains local binaries and path cache)
+.cache/
+
 # Compilation Database
 /compile_commands.json
 
 # Coverage
 /coverage.info
 /coverage_report
-
-# Tools
-/bazel-tools
 
 # Editor
 .vscode/
