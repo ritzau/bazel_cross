@@ -47,7 +47,7 @@ targets=(
     "//tools/grcov"
     "//tools/dprint"
     "@llvm_toolchain//:bin/clangd"
-    "@python_3_11//:python3"
+    "@python_3_12//:python3"
 )
 
 # 2. Build tools (optional)

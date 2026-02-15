@@ -17,11 +17,11 @@ bazel_dep(name = "rules_go", version = "0.60.0")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
-    python_version = "3.11",
+    python_version = "3.12",
 )
-use_repo(python, "python_3_11")
+use_repo(python, "python_3_12")
 
-register_toolchains("@python_3_11//:all")
+register_toolchains("@python_3_12//:all")
 
 bazel_dep(name = "buildifier_prebuilt", version = "6.4.0", dev_dependency = True)
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
