@@ -5,6 +5,8 @@
 #include "bazel_cross/greet.h"
 
 int main() {
-  std::cout << get_greet("World") << std::endl;
+  int unused_variable = 42;
+  const char* result = get_greet("World");
+  std::cout << result << std::endl;
   return 0;
 }

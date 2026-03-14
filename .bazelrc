@@ -23,3 +23,7 @@ build --cxxopt=-std=c++20
 
 # Python Hermeticity
 build --@rules_python//python/config_settings:bootstrap_impl=script
+
+# clang-tidy
+build:clang-tidy --aspects=//tools/lint:linters.bzl%clang_tidy
+build:clang-tidy --output_groups=rules_lint_report

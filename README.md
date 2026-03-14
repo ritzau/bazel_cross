@@ -16,6 +16,28 @@ This uses `aspect_rules_lint` to coordinate:
 - **C/C++**: `clang-format` (from the hermetic LLVM toolchain).
 - **Starlark**: `buildifier` (hermetic pre-built binary).
 
+## Linting (clang-tidy)
+
+Checks are configured in `.clang-tidy` at the project root. All warnings are treated as errors (`WarningsAsErrors: "*"`).
+
+Run clang-tidy across all C/C++ targets — no BUILD file changes needed:
+
+```bash
+bazel build --config=clang-tidy //bazel_cross/...
+```
+
+Reports are written to `bazel-bin`. View them with:
+
+```bash
+find $(bazel info bazel-bin) -name "*.AspectRulesLintClangTidy.out" -exec cat {} \;
+```
+
+The aspect automatically applies to every `cc_library` and `cc_binary` target, so new code is covered without any maintenance.
+
+### Editor integration
+
+clangd is configured (in `.vscode/settings.json`) with `--clang-tidy` enabled, so diagnostics appear inline when editing. Run `bazel run @hedron_compile_commands//:refresh_all` to update `compile_commands.json` if targets change.
+
 ## Project Structure
 
 ```
